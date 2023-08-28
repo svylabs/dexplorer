@@ -127,7 +127,7 @@ export default function DetailBlock() {
       }
     }
 
-    return ''
+    return String(msgData)
   }
 
   const showError = (err: Error) => {
