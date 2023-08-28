@@ -37,6 +37,7 @@ import {
   getTypeMsg,
 } from '@/utils/helper'
 import { decodeMsg, DecodeMsg } from '@/encoding'
+import { fromBinary } from '@cosmjs/cosmwasm-stargate'
 
 export default function DetailBlock() {
   const router = useRouter()
@@ -52,7 +53,6 @@ export default function DetailBlock() {
     if (tmClient && hash) {
       getTx(tmClient, hash as string)
         .then((tx) => {
-          console.log(tx);
           setTx(tx);
         })
         .catch(showError)
@@ -96,6 +96,7 @@ export default function DetailBlock() {
 
   const showMsgData = (msgData: any) => {
     if (msgData) {
+      //console.log(fromBinary("eyJzZXR1cF9wb2xsIjogeyJwb2xsX2RldGFpbHMiOiB7InRvcGljIjogIlllcyAtIE5vIC0gTWF5IGJlIiwgImNob2ljZXMiOiBbIjAiLCAiMSIsICIyIiwgIjMiLCAiNCJdLCAicG9sbF90eXBlIjogInNpbmdsZV9jaG9pY2UiLCAic3RhcnRfdGltZSI6IDEsICJlbmRfdGltZSI6IDJ9fX0="));
       if (Array.isArray(msgData)) {
         return JSON.stringify(msgData)
       }
@@ -113,6 +114,14 @@ export default function DetailBlock() {
             </Link>
           )
         } else {
+          const decoder = new TextDecoder('utf8');
+          const str = msgData.toString();
+          try {
+             const str1 = btoa(decoder.decode(new Uint8Array(str.split(",").map((n) => parseInt(n)))));
+             return JSON.stringify(fromBinary(str1), null, 2);
+          } catch (ex) {
+            console.log("unable to decode..", ex);
+          }
           return String(msgData)
         }
       }
@@ -310,9 +319,11 @@ export default function DetailBlock() {
                             <b>{key}</b>
                           </Td>
                           <Td>
+                            <pre>
                             {showMsgData(
                               msg.data ? msg.data[key as keyof {}] : ''
                             )}
+                            </pre>
                           </Td>
                         </Tr>
                       ))}

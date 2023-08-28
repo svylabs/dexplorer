@@ -3,6 +3,7 @@ import { MsgWithdrawDelegatorReward } from 'cosmjs-types/cosmos/distribution/v1b
 import { MsgDelegate } from 'cosmjs-types/cosmos/staking/v1beta1/tx'
 import { MsgUpdateClient } from 'cosmjs-types/ibc/core/client/v1/tx'
 import { MsgAcknowledgement } from 'cosmjs-types/ibc/core/channel/v1/tx'
+import { MsgExecuteContract, MsgInstantiateContract } from 'cosmjs-types/cosmwasm/wasm/v1/tx';
 import {
   MsgExec,
   MsgGrant,
@@ -21,6 +22,8 @@ const TYPE = {
   MsgGrant: '/cosmos.authz.v1beta1.MsgGrant',
   MsgRevoke: '/cosmos.authz.v1beta1.MsgRevoke',
   MsgTransfer: '/ibc.applications.transfer.v1.MsgTransfer',
+  MsgWasmExecute: '/cosmwasm.wasm.v1.MsgExecuteContract',
+  MsgWasmInstantiate: '/cosmwasm.wasm.v1.MsgInstantiateContract',
 }
 
 export interface DecodeMsg {
@@ -57,6 +60,12 @@ export const decodeMsg = (typeUrl: string, value: Uint8Array): DecodeMsg => {
       break
     case TYPE.MsgTransfer:
       data = MsgTransfer.decode(value)
+      break
+    case TYPE.MsgWasmExecute:
+      data = MsgExecuteContract.decode(value)
+      break
+    case TYPE.MsgWasmInstantiate:
+      data = MsgInstantiateContract.decode(value)
       break
     default:
       break
