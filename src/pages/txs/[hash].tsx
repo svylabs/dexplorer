@@ -281,6 +281,12 @@ export default function DetailBlock() {
                   </Td>
                   <Td>{txData?.body?.memo}</Td>
                 </Tr>
+                <Tr>
+                  <Td pl={0} width={150}>
+                    <b>Log</b>
+                  </Td>
+                  <Td><pre>{JSON.stringify(JSON.parse(tx?.rawLog || "{}"), null, 2)}</pre></Td>
+                </Tr>
               </Tbody>
             </Table>
           </TableContainer>
