@@ -51,7 +51,10 @@ export default function DetailBlock() {
   useEffect(() => {
     if (tmClient && hash) {
       getTx(tmClient, hash as string)
-        .then(setTx)
+        .then((tx) => {
+          console.log(tx);
+          setTx(tx);
+        })
         .catch(showError)
     }
   }, [tmClient, hash])
@@ -64,6 +67,7 @@ export default function DetailBlock() {
 
   useEffect(() => {
     if (tx?.tx) {
+      console.log(tx);
       const data = Tx.decode(tx?.tx)
       setTxData(data)
     }
@@ -118,6 +122,7 @@ export default function DetailBlock() {
   }
 
   const showError = (err: Error) => {
+    console.log(err);
     const errMsg = err.message
     let error = null
     try {
